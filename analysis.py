@@ -1,10 +1,18 @@
+# ==========================================================
+#                    IPL PLAYER ANALYSIS ENGINE
+# ==========================================================
+
+import os
 import pandas as pd
 
 # ==========================================================
 #                       LOAD DATASET
 # ==========================================================
 
-data = pd.read_csv("data/IPL_Ball_by_Ball_2008_2022.csv")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE_DIR, "data", "IPL_Ball_by_Ball_2008_2022.csv")
+
+data = pd.read_csv(DATA_PATH)
 
 
 # ==========================================================
@@ -141,7 +149,7 @@ def wickets_per_match(player_name):
     if player_data.empty:
         return None
 
-    # All matches bowled
+    # All matches where bowler bowled
     all_matches = (
         player_data
         .groupby('ID')
@@ -175,7 +183,6 @@ def wickets_per_match(player_name):
     )
 
     final_df['wickets'] = final_df['wickets'].fillna(0)
-
     final_df = final_df.sort_values('ID')
     final_df['Match_No'] = range(1, len(final_df) + 1)
 
@@ -210,7 +217,6 @@ def get_bowling_form(player_name):
     avg_wickets = last5['Wickets Taken'].mean()
     best_spell = last5['Wickets Taken'].max()
 
-    # Realistic IPL thresholds
     if avg_wickets >= 2:
         rating = "🔥 Excellent Bowling Form"
     elif avg_wickets >= 1:
